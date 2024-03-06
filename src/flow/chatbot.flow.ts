@@ -2,7 +2,7 @@ import BotWhatsapp from '@bot-whatsapp/bot';
 import { generatePaymentLink } from 'src/services/paypal';
 
 /**
- * Un flujo conversacion que responder a las palabras claves "hola", "buenas", ...
+ * Un flujo conversacion que responder cuando el cliente esta interesado en chatbot ...
  */
 export default BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.ACTION)
     .addAnswer('¿Como es tu email? lo necesito para generar link de pago',{capture:true}, 

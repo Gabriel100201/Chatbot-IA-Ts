@@ -4,12 +4,14 @@ import { run, runDetermine } from 'src/services/openai';
 import chatbotFlow from './chatbot.flow';
 
 /**
- * Un flujo conversacion que es por defecto cunado no se contgiene palabras claves en otros flujos
+ * Un flujo conversacion que es por defecto cunado no se contgiene palabras claves en otros flujos.
+ * Es decir, el flujo que hace uso de la IA.
+ * El objetivo es persuadir al cliente a hacer uso de otros flujos con la deteccion de palabras clave.
  */
 export default BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.WELCOME)
     .addAction(async (ctx, {state, gotoFlow}) => {
         try{
-            const history = (state.getMyState()?.history ?? []) as ChatCompletionMessageParam[]
+			const history = (state.getMyState()?.history ?? []) as ChatCompletionMessageParam[]
             const ai = await runDetermine(history)
 
             console.log(`[QUE QUIERES COMPRAR:`,ai.toLowerCase())
@@ -22,9 +24,6 @@ export default BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.WELCOME)
                 return gotoFlow(chatbotFlow)
             }
             
-
-            /**..... */
-
         }catch(err){
             console.log(`[ERROR]:`,err)
             return
