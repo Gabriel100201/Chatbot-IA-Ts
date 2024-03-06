@@ -2,6 +2,7 @@ import BotWhatsapp from '@bot-whatsapp/bot';
 import { ChatCompletionMessageParam } from 'openai/resources';
 import { run, runDetermine } from 'src/services/openai';
 import chatbotFlow from './chatbot.flow';
+import vendedor from './vendedor';
 
 /**
  * Un flujo conversacion que es por defecto cunado no se contgiene palabras claves en otros flujos.
@@ -14,14 +15,14 @@ export default BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.WELCOME)
 			const history = (state.getMyState()?.history ?? []) as ChatCompletionMessageParam[]
             const ai = await runDetermine(history)
 
-            console.log(`[QUE QUIERES COMPRAR:`,ai.toLowerCase())
+            console.log(`DECIDIDO A COMPRAR?:`,ai.toLowerCase())
 
             if(ai.toLowerCase().includes('unknown')){
                 return 
             }
 
-            if(ai.toLowerCase().includes('chatbot')){
-                return gotoFlow(chatbotFlow)
+            if(ai.toLowerCase().includes('decidido')){
+                return gotoFlow(vendedor)
             }
             
         }catch(err){
@@ -34,8 +35,8 @@ export default BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.WELCOME)
             const newHistory = (state.getMyState()?.history ?? []) as ChatCompletionMessageParam[]
             const name = ctx?.pushName ?? ''
     
-            console.log(`[HISTORY]:`,newHistory)
-    
+/*             console.log(`[HISTORY]:`,newHistory)
+ */    
             newHistory.push({
                 role: 'user',
                 content: ctx.body
