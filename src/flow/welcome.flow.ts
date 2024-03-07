@@ -1,8 +1,9 @@
 import BotWhatsapp from '@bot-whatsapp/bot';
 import { ChatCompletionMessageParam } from 'openai/resources';
 import { run, runDetermine } from 'src/services/openai';
-import chatbotFlow from './chatbot.flow';
 import vendedor from './vendedor';
+import { addToCCVClients } from 'src/helpers/addToCCVClients';
+import CCVClients from "../constants/CCVClients.json";
 
 /**
  * Un flujo conversacion que es por defecto cunado no se contgiene palabras claves en otros flujos.
@@ -11,6 +12,7 @@ import vendedor from './vendedor';
  */
 export default BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.WELCOME)
     .addAction(async (ctx, {state, gotoFlow}) => {
+        if (CCVClients.includes(ctx.from)) return
         try{
 			const history = (state.getMyState()?.history ?? []) as ChatCompletionMessageParam[]
             const ai = await runDetermine(history)
@@ -20,6 +22,7 @@ export default BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.WELCOME)
             }
 
             if(ai.toLowerCase().includes('decidido')){
+                addToCCVClients(ctx);
                 return gotoFlow(vendedor)
             }
             
@@ -29,6 +32,7 @@ export default BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.WELCOME)
         }
     })
     .addAction(async (ctx, { flowDynamic, state }) => {
+        if (CCVClients.includes(ctx.from)) return
         try{
             const newHistory = (state.getMyState()?.history ?? []) as ChatCompletionMessageParam[]
             const name = ctx?.pushName ?? ''
