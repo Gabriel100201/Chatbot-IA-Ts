@@ -15,8 +15,6 @@ export default BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.WELCOME)
 			const history = (state.getMyState()?.history ?? []) as ChatCompletionMessageParam[]
             const ai = await runDetermine(history)
 
-            console.log(`DECIDIDO A COMPRAR?:`,ai.toLowerCase())
-
             if(ai.toLowerCase().includes('unknown')){
                 return 
             }
@@ -35,8 +33,6 @@ export default BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.WELCOME)
             const newHistory = (state.getMyState()?.history ?? []) as ChatCompletionMessageParam[]
             const name = ctx?.pushName ?? ''
     
-/*             console.log(`[HISTORY]:`,newHistory)
- */    
             newHistory.push({
                 role: 'user',
                 content: ctx.body
